@@ -119,6 +119,50 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &629986633
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 629986635}
+  - component: {fileID: 629986634}
+  m_Layer: 0
+  m_Name: ObjectPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &629986634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 629986633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a09aac0ca6ef5474db282c3329414035, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PoolTesting
+--- !u!4 &629986635
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 629986633}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -678.38055, y: 0, z: 10.65642}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &756769393
 GameObject:
   m_ObjectHideFlags: 0
@@ -333,13 +377,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1161507644}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.2784871, y: -0, z: -0, w: 0.96044}
-  m_LocalPosition: {x: 0, y: 20.6, z: -29.8}
+  m_LocalRotation: {x: 0.2872543, y: -0, z: -0, w: 0.95785445}
+  m_LocalPosition: {x: 0, y: 31.5, z: -46.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 32.34, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 33.387, y: 0, z: 0}
 --- !u!114 &1161507648
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -397,7 +441,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
   _followTarget: {fileID: 1813826877}
-  _followSmoothing: 0.1
+  _followSmoothing: 0.05
 --- !u!1 &1796683090
 GameObject:
   m_ObjectHideFlags: 0
@@ -666,9 +710,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Movement
   _rigidBody: {fileID: 1813826873}
-  _speed: 12
-  _acceleration: 20
-  _deceleration: 30
+  _speed: 25
+  _acceleration: 80
+  _deceleration: 100
 --- !u!114 &1813826879
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -707,3 +751,4 @@ SceneRoots:
   - {fileID: 756769395}
   - {fileID: 1813826877}
   - {fileID: 1796683094}
+  - {fileID: 629986635}
