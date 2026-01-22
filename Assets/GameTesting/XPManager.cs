@@ -32,7 +32,7 @@ public class XPManager : MonoBehaviour
         
         _currentXP += toAdd;
         
-        _onXPGained?.Invoke(prevXP, _currentLevel);
+        _onXPGained.Invoke(prevXP, _currentLevel);
         OnXPGainedEvent?.Invoke(prevXP, _currentLevel);
         
         while (_currentXP >= _currentXPReq)
