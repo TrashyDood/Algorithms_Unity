@@ -45,7 +45,12 @@ public abstract class ObjectPool<T>
     protected abstract void OnPooled(T obj);
 }
 
-public class ObjPool<T> : ObjectPool<T>
+/// <summary>
+/// Defines an object pool specifically for a given object type that derives from PoolableComponent.
+/// </summary>
+/// <typeparam name="T">The type which derives from PoolableComponent.</typeparam>
+[Serializable]
+public class ComponentPool<T> : ObjectPool<T>
 where T : PoolableComponent<T>
 {
     protected override T CreateObject(T template) =>
@@ -71,13 +76,17 @@ where T : PoolableComponent<T>
     public PoolableComponent() =>
         _derived = (T)this;
     
-    public virtual void OnPooled() =>
+    public virtual void OnPooled()
+    {
         _isPooled = true;
+        gameObject.SetActive(false);
+    }
 
-    public void OnFetched(ObjectPool<T> pool)
+    public virtual void OnFetched(ObjectPool<T> pool)
     {
         _pool = pool;
         _isPooled = false;
+        gameObject.SetActive(true);
     }
 
     public bool ReturnToPool() => _pool.PoolObject(_derived);
