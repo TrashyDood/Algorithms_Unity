@@ -20,39 +20,34 @@ public class CreatureBuilder : MonoBehaviour
 [Serializable]
 public class Body
 {
-    [SerializeField]
-    List<Bodypart> bodyparts = new();
-    [SerializeField]
-    Vector3Int maxSize;
+    BodyCube[,,] _bodyCubes = new BodyCube[7, 7, 7];
+    
+    public Vector3 MaxSize => new(_bodyCubes.GetLength(0),
+        _bodyCubes.GetLength(1),
+        _bodyCubes.GetLength(2));
+    
+    public Vector3Int Center => new(
+        Mathf.CeilToInt(_bodyCubes.GetLength(0) * 0.5f),
+        Mathf.CeilToInt(_bodyCubes.GetLength(1) * 0.5f),
+        Mathf.CeilToInt(_bodyCubes.GetLength(2) * 0.5f));
+    
+    public BodyCube this[int x, int y, int z] => _bodyCubes[x, y, z];
+    public BodyCube this[Vector3Int position] => _bodyCubes[position.x, position.y, position.z];
 
-    BodyCube _center;
-
-    public Vector3Int MaxSize => maxSize;
-    public Vector3Int Center => new(Mathf.CeilToInt(maxSize.x * 0.5f), Mathf.CeilToInt(maxSize.y * 0.5f), Mathf.CeilToInt(maxSize.z * 0.5f));
-
-    public void Attach(int index, Orientation orientation, Bodypart toAttach)
+    float CalcMass()
     {
-        bodyparts.Add(toAttach);
+        return 0;
     }
 }
 
 [Serializable]
 public class Bodypart
 {
-    public Vector3Int position;
-    public float mass;
-
-    public Bodypart(Vector3Int position, float mass)
-    {
-        this.position = position;
-        this.mass = mass;
-    }
+    
 }
 
 [Serializable]
 public class BodyCube : Bodypart
 {
-    public Bodypart[] slots = new Bodypart[6];
-
-    public BodyCube(Vector3Int position, float mass) : base(position, mass) { }
+    
 }
