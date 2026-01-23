@@ -26,7 +26,7 @@ public class Movement : MonoBehaviour
             _targetVelocity,
             ((_currentVelocity.sqrMagnitude > _targetVelocity.sqrMagnitude) ? _deceleration : _acceleration) * Time.fixedDeltaTime);
 
-        _rigidBody.MovePosition(transform.position + _currentVelocity * Time.fixedDeltaTime);
+        _rigidBody.Move(transform.position + _currentVelocity * Time.fixedDeltaTime, Quaternion.LookRotation(_currentVelocity + transform.position));
     }
 
     public float Speed
