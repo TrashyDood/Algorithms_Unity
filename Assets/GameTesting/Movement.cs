@@ -49,7 +49,6 @@ public class Movement : MonoBehaviour
 
     public void OnMove(InputValue value)
     {
-        Debug.Log("OnMove");
         _input = value.Get<Vector2>();
         _targetVelocity = new Vector3(_input.x, 0, _input.y) * _speed;
     }

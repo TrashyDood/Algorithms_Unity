@@ -5,17 +5,17 @@ using UnityEngine;
 public class EnemyManager : MonoBehaviour
 {
     [SerializeField]
-    EnemyPool _enemyPool;
+    EnemyPool enemyPool;
     [SerializeField]
-    Transform _spawnCenter;
+    Transform spawnCenter;
     [SerializeField]
-    EnemySpawnConfig _config;
+    EnemySpawnConfig config;
 
-    float _spawnIntervalTimer;
-    bool _isSpawning;
+    float spawnIntervalTimer;
+    bool isSpawning;
 
     public static EnemyManager Instance { get; private set; }
-    public EnemySpawnConfig Config => _config;
+    public EnemySpawnConfig Config => config;
 
     private void Awake()
     {
@@ -23,28 +23,30 @@ public class EnemyManager : MonoBehaviour
             Destroy(Instance);
 
         Instance = this;
+
+        enemyPool.parent = transform;
     }
 
     private void FixedUpdate()
     {
-        if (_spawnIntervalTimer <= 0 && !_isSpawning)
+        if (spawnIntervalTimer <= 0 && !isSpawning)
         {
-            _spawnIntervalTimer = UnityEngine.Random.Range(_config.minInterval, _config.maxInterval);
+            spawnIntervalTimer = UnityEngine.Random.Range(config.minInterval, config.maxInterval);
             StartCoroutine(
                 SpawnEnemies(
-                    UnityEngine.Random.Range(_config.minDuration, _config.maxDuration),
-                    (int)UnityEngine.Random.Range(_config.minCount, _config.maxCount)));
+                    UnityEngine.Random.Range(config.minDuration, config.maxDuration),
+                    (int)UnityEngine.Random.Range(config.minCount, config.maxCount)));
         }
         else
-            _spawnIntervalTimer -= Time.fixedDeltaTime;
+            spawnIntervalTimer -= Time.fixedDeltaTime;
     }
 
     Vector3 DeterminePosition() =>
-        Utils.RandomCircleEdge(_config.spawnRadius) + _spawnCenter.position;
+        Utils.RandomCircleEdge(config.spawnRadius) + spawnCenter.position;
 
     Enemy SpawnEnemy(Vector3 position)
     {
-        Enemy enemy = _enemyPool.FetchObject();
+        Enemy enemy = enemyPool.FetchObject();
         enemy.transform.position = position;
 
         return enemy;
@@ -52,7 +54,7 @@ public class EnemyManager : MonoBehaviour
 
     IEnumerator SpawnEnemies(float duration, int count)
     {
-        _isSpawning = true;
+        isSpawning = true;
         float interval = duration / count;
 
         for (int i = 0; i < count; i++)
@@ -61,14 +63,20 @@ public class EnemyManager : MonoBehaviour
             yield return new WaitForSeconds(interval);
         }
 
-        _isSpawning = false;
+        isSpawning = false;
     }
 }
 
 [Serializable]
 public class EnemyPool : ComponentPool<Enemy>
 {
+    public Transform parent;
 
+    protected override void OnFetched(Enemy obj)
+    {
+        base.OnFetched(obj);
+        obj.transform.parent = parent;
+    }
 }
 
 [Serializable]

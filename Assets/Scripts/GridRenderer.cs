@@ -21,12 +21,6 @@ public class GridRenderer : MonoBehaviour
             for (int y = 0; y < grid.Height; y++)
                 Gizmos.DrawCube(transform.position + new Vector3(x, y), Vector3.one * 0.75f);
     }
-
-    [EditorUtils.Button]
-    void UpdateGrid()
-    {
-        Debug.Log("button");
-    }
 }
 
 
