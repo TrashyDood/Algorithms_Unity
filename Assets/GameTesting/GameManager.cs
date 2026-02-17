@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        stateManager[GameState.Playing].onEnterCallback += () => { Debug.Log("Game Start!"); };
+        
     }
 
     private void Start()

@@ -1,11 +1,12 @@
-using System.Collections.Generic;
+using System;
+using System.Collections;
 using UnityEngine;
 
 public static class Utils
 {
-    #region random vector
+    #region vector
     public static Vector2 RandomVector2(float xMax, float yMax, float xMin = 0, float yMin = 0) =>
-        new Vector2(Random.Range(xMin, xMax), Random.Range(yMin, yMax));
+        new Vector2(UnityEngine.Random.Range(xMin, xMax), UnityEngine.Random.Range(yMin, yMax));
 
     public static Vector2 RandomVector2(Vector2 max, Vector3 min = default) =>
         RandomVector2(max.x, max.y, min.x, min.y);
@@ -32,7 +33,7 @@ public static class Utils
 
     public static Vector3 RandomCircleEdge(float radius)
     {
-        float angle = Random.Range(0, Mathf.PI * 2);
+        float angle = UnityEngine.Random.Range(0, Mathf.PI * 2);
         return new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * radius;
     }
     #endregion
@@ -120,64 +121,25 @@ public static class Utils
         bounds.min.y, bounds.max.y, bounds.min.z, bounds.max.z);
     #endregion
 
-    public static T WeightedRandom<T>(params (T, float)[] values)
-    {
-        float total = 0;
-        for (int i = 0; i < values.Length; i++)
-            total += values[i].Item2;
+    #region Arithmetic
+    public static double Oscillate(double frequency, double x) =>
+        Math.Sin(2 * Mathf.PI * x * frequency);
 
-        float rand = UnityEngine.Random.Range(0, total);
-        int index = 0;
+    public static float Oscillate(float frequency, float t) =>
+        (float)Math.Sin(2 * Mathf.PI * frequency * t);
 
-        for (int i = 0; i < values.Length; i++)
-        {
-            if (rand < values[i].Item2)
-            {
-                index = i;
-                break;
-            }
+    public static float RoundToNearest(float value, float increment) =>
+        MathF.Round(value / increment) * increment;
 
-            rand -= values[i].Item2;
-        }
+    public static float FloorToNearest(float value, float increment) =>
+        (int)(value / increment) * increment;
 
-        return values[index].Item1;
-    }
+    public static double RoundToNearest(double value, double increment) =>
+        Math.Round(value / increment) * increment;
 
-    public static float OscillateDamped(float time, float timeEnd, float frequency,
-        float freqDamp)
-    {
-        freqDamp = Mathf.Clamp01(freqDamp);
-        float dampFactor = Mathf.Min(time, timeEnd) / timeEnd;
-
-        return Mathf.Sin(Mathf.PI * time * frequency * (1 - dampFactor * freqDamp)) * (1 - dampFactor);
-    }
-
-    public static float Snap(float value, float size) =>
-        Mathf.Round(value / size) * size;
-
-    public static float SnapCeil(float value, float size) =>
-        Mathf.Ceil(value / size) * size;
-
-    public static int WeightedRandom(float[] weights)
-    {
-        int count = weights.Length;
-        float totalWeight = 0;
-
-        for (int i = 0; i < count; i++)
-            totalWeight += weights[i];
-
-        float rand = Random.Range(0, totalWeight);
-
-        for (int i = 0; i < count; i++)
-        {
-            if (rand < weights[i])
-                return i;
-
-            rand -= weights[i];
-        }
-
-        return weights.Length - 1;
-    }
+    public static double FloorToNearest(double value, double increment) =>
+        ((int)(value / increment)) * increment;
+    #endregion
 
     #region extensions
     public static Vector2 GetOrthoSize(this Camera camera)
@@ -193,32 +155,41 @@ public static class Utils
         Mathf.Clamp(vector.y, min.y, max.y),
         Mathf.Clamp(vector.z, min.z, max.z));
 
-    public static TKey[] GetKeys<TKey, TValue>(this Dictionary<TKey, TValue> items)
+    public static Vector3 SmoothFollow(this Vector3 vector, Vector3 target, float smoothFactor, float delta) =>
+        Vector3.Lerp(vector, target, (1 / smoothFactor) * delta);
+
+    public static Vector3 RoundToNearest(this Vector3 vector, float increment) =>
+        new Vector3(RoundToNearest(vector.x, increment),
+        RoundToNearest(vector.y, increment),
+        RoundToNearest(vector.z, increment));
+
+    public static Vector3 FloorToNearest(this Vector3 vector, float increment) =>
+        new Vector3(FloorToNearest(vector.x, increment),
+        FloorToNearest(vector.y, increment),
+        FloorToNearest(vector.z, increment));
+    #endregion
+
+    #region coroutines
+    public static IEnumerator Timer(float duration, Action callback)
     {
-        TKey[] keys = new TKey[items.Count];
-        int i = 0;
+        float endTime = Time.time + duration;
 
-        foreach (var item in items)
-        {
-            keys[i] = item.Key;
-            i++;
-        }
+        while (Time.time < endTime)
+            yield return new WaitForFixedUpdate();
 
-        return keys;
+        callback.Invoke();
     }
 
-    public static TValue[] GetValues<TKey, TValue>(this IDictionary<TKey, TValue> items)
+    public static IEnumerator FixedUpdate(uint durationFrames, Action<float> callback)
     {
-        TValue[] values = new TValue[items.Count];
-        int i = 0;
+        uint frameCount = 0;
 
-        foreach (var item in items)
+        while (frameCount < durationFrames)
         {
-            values[i] = item.Value;
-            i++;
+            callback.Invoke(frameCount);
+            yield return new WaitForFixedUpdate();
+            frameCount++;
         }
-
-        return values;
     }
     #endregion
 }

@@ -24,7 +24,7 @@ public class StateManager<T> where T : IState
 
     public int CurrentStateIndex
     {
-        get => CurrentStateIndex;
+        get => currentStateIndex;
         set => SetState(value);
     }
 
