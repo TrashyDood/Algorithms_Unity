@@ -19,7 +19,7 @@ public class CameraController : MonoBehaviour
     private void FixedUpdate()
     {
         if (target != null)
-            transform.position.SmoothFollow(target.position + offset, smoothing, Time.fixedDeltaTime);
+            transform.position = transform.position.SmoothFollow(target.position + offset, smoothing, Time.fixedDeltaTime);
     }
 
     public void Shake(Vector3 amplitude, float frequency = 15, uint duration = 50) =>

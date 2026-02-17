@@ -8,59 +8,35 @@ public class Tester : MonoBehaviour
     [SerializeField]
     Transform target;
     [SerializeField]
-    float frequency = 5;
+    float duration = 1;
     [SerializeField]
-    uint duration = 200;
+    uint frequency = 5;
     [SerializeField]
     Vector3 amplitude;
 
-    public double value,
-        positive,
-        negative;
-
     void OnJump(InputValue inputValue)
     {
-        StartCoroutine(Oscillate(frequency, duration));
+        StartCoroutine(Utils.CROscillate((f) =>
+        {
+            target.eulerAngles = Utils.RoundToNearest(target.eulerAngles + amplitude * f, 0.0001f);
+        }, frequency, duration));
     }
 
-    IEnumerator Oscillate1(float frequency, float duration)
+    IEnumerator OscillateCR(Action<float> action, uint frequency, float durationSeconds, float epsilon = 0.0001f)
     {
-        Debug.Log("Starting with " + duration + " seconds duration.");
-
+        int durationFrames = (int)MathF.Round(durationSeconds / Time.fixedDeltaTime);
         float previousValue = 0;
-        duration /= Time.fixedDeltaTime;
-        duration -= duration % 2;
 
-        Debug.Log("Converted to " + duration + " frames.");
-
-        for (int i = 0; i <= duration; i++)
+        for (int i = 1; i <= durationFrames; i++)
         {
-            float t = (int)(i / (duration) * 1000f) / 1000f; // Round to 3rd decimal.
-            float currentValue = (float)Math.Sin(2 * Mathf.PI * frequency * t);
+            float t = i / (float)durationFrames;
+            float currentValue = Utils.FloorToNearest((float)Math.Sin(2 * Mathf.PI * frequency * t) * (1 - t), epsilon);
             float delta = currentValue - previousValue;
 
-
-
-            Debug.Log(t);
+            action(delta);
 
             yield return new WaitForFixedUpdate();
-        }
-    }
-
-    IEnumerator Oscillate(float frequency, float duration)
-    {
-        Debug.Log("Starting with " + duration + " seconds duration.");
-
-        duration = 1 / duration;
-
-        Debug.Log("Converted to " + duration + " frames.");
-
-        for (int i = 0; i <= duration; i++)
-        {
-            float t = MathF.Round(i / (duration) * 1000f) / 1000f; // Round to 3rd decimal.
-            Debug.Log(t);
-
-            yield return new WaitForFixedUpdate();
+            previousValue = currentValue;
         }
     }
 }

@@ -149,13 +149,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6eafce2c2174daa4e8889ec0a451d4b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Tester
-  target: {fileID: 1921381240}
-  frequency: 5
-  duration: 3
-  amplitude: {x: 0, y: 2, z: 0}
-  value: 0
-  positive: 0
-  negative: 0
+  target: {fileID: 1161507647}
+  duration: 1
+  frequency: 10
+  amplitude: {x: 0, y: 0, z: 7}
 --- !u!114 &672616223
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -587,7 +584,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
   target: {fileID: 1921381240}
-  smoothing: 0
+  smoothing: 0.5
 --- !u!1 &1813826872
 GameObject:
   m_ObjectHideFlags: 0

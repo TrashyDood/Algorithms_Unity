@@ -128,6 +128,12 @@ public static class Utils
     public static float Oscillate(float frequency, float t) =>
         (float)Math.Sin(2 * Mathf.PI * frequency * t);
 
+    public static float OscillateDamped(float frequency, float t)
+    {
+        t = Mathf.Clamp01(t);
+        return Oscillate(frequency, t) * (1f - t);
+    }
+
     public static float RoundToNearest(float value, float increment) =>
         MathF.Round(value / increment) * increment;
 
@@ -170,7 +176,7 @@ public static class Utils
     #endregion
 
     #region coroutines
-    public static IEnumerator Timer(float duration, Action callback)
+    public static IEnumerator CRTimer(float duration, Action callback)
     {
         float endTime = Time.time + duration;
 
@@ -180,7 +186,7 @@ public static class Utils
         callback.Invoke();
     }
 
-    public static IEnumerator FixedUpdate(uint durationFrames, Action<float> callback)
+    public static IEnumerator CRFixedUpdate(uint durationFrames, Action<float> callback)
     {
         uint frameCount = 0;
 
@@ -189,6 +195,23 @@ public static class Utils
             callback.Invoke(frameCount);
             yield return new WaitForFixedUpdate();
             frameCount++;
+        }
+    }
+
+    public static IEnumerator CROscillate(Action<float> action, uint frequency, float durationSeconds, float epsilon = 0.0001f)
+    {
+        int durationFrames = (int)MathF.Round(durationSeconds / Time.fixedDeltaTime);
+        float previousValue = 0;
+
+        for (int i = 1; i <= durationFrames; i++)
+        {
+            float currentValue = FloorToNearest(OscillateDamped(frequency, i / (float)durationFrames), epsilon);
+            float delta = currentValue - previousValue;
+
+            action(delta);
+
+            yield return new WaitForFixedUpdate();
+            previousValue = currentValue;
         }
     }
     #endregion
