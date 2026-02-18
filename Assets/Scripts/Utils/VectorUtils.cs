@@ -37,29 +37,27 @@ public static class VectorUtils
     #endregion
 
     #region bounds
-    public static bool OutOfBounds(float x, float y, float xMin,
-        float xMax, float yMin, float yMax) =>
-    !(x == Mathf.Clamp(x, xMin, xMax) &&
-    y == Mathf.Clamp(y, yMin, yMax));
+    public static bool OutOfBounds(float x, float y, float xMin, float xMax, float yMin, float yMax) =>
+        !(x == Mathf.Clamp(x, xMin, xMax) &&
+            y == Mathf.Clamp(y, yMin, yMax));
 
     public static bool OutOfBounds(Vector2 position, Vector2 min, Vector2 max) =>
-    OutOfBounds(position.x, position.y, min.x, max.x, min.y, max.y);
+        OutOfBounds(position.x, position.y, min.x, max.x, min.y, max.y);
 
     public static bool OutOfBounds(Vector2 position, Rect bounds) =>
-    OutOfBounds(position.x, position.y, bounds.min.x, bounds.max.x, bounds.min.y, bounds.min.y);
+        OutOfBounds(position.x, position.y, bounds.min.x, bounds.max.x, bounds.min.y, bounds.min.y);
 
-    public static bool OutOfBounds(float x, float y, float z, float xMin,
-        float xMax, float yMin, float yMax, float zMin, float zMax) =>
+    public static bool OutOfBounds(float x, float y, float z, float xMin, float xMax, float yMin, float yMax, float zMin, float zMax) =>
         !(x == Mathf.Clamp(x, xMin, xMax) &&
-        y == Mathf.Clamp(y, yMin, yMax) &&
-        z == Mathf.Clamp(z, zMin, zMax));
+            y == Mathf.Clamp(y, yMin, yMax) &&
+            z == Mathf.Clamp(z, zMin, zMax));
 
     public static bool OutOfBounds(Vector3 position, Vector3 min, Vector3 max) =>
-    OutOfBounds(position.x, position.y, position.z, min.x, max.x, min.y, max.y, min.z, max.z);
+        OutOfBounds(position.x, position.y, position.z, min.x, max.x, min.y, max.y, min.z, max.z);
 
     public static bool OutOfBounds(Vector3 position, Bounds bounds) =>
-    OutOfBounds(position.x, position.y, position.z, bounds.min.x,
-        bounds.max.x, bounds.min.y, bounds.max.y, bounds.min.z, bounds.max.z);
+        OutOfBounds(position.x, position.y, position.z, bounds.min.x,
+            bounds.max.x, bounds.min.y, bounds.max.y, bounds.min.z, bounds.max.z);
 
     public static Vector2 OutsideBounds(float x, float y, float xMin,
         float xMax, float yMin, float yMax)
@@ -85,7 +83,7 @@ public static class VectorUtils
 
     public static Vector2 OutsideBounds(Vector2 position, Rect bounds) =>
         OutsideBounds(position.x, position.y, bounds.min.x,
-            bounds.max.x, bounds.min.y, bounds.max.y);
+           bounds.max.x, bounds.min.y, bounds.max.y);
 
     public static Vector3 OutsideBounds(float x, float y, float z, float xMin,
         float xMax, float yMin, float yMax, float zMin, float zMax)
@@ -128,20 +126,20 @@ public static class VectorUtils
 
     public static Vector3 ClampVector(this Vector3 vector, Vector3 min, Vector3 max) =>
         new Vector3(Mathf.Clamp(vector.x, min.x, max.x),
-            Mathf.Clamp(vector.y, min.y, max.y),
-            Mathf.Clamp(vector.z, min.z, max.z));
+        Mathf.Clamp(vector.y, min.y, max.y),
+        Mathf.Clamp(vector.z, min.z, max.z));
 
-    public static Vector3 SmoothFollow(this Vector3 vector, Vector3 target, float smoothFactor, float delta) =>
-        Vector3.Lerp(vector, target, (1 / smoothFactor) * delta);
+    public static Vector3 SmoothFollow(this Vector3 vector, Vector3 target, float smoothing, float delta) =>
+        Vector3.Lerp(vector, target, (1 / smoothing) * delta);
 
     public static Vector3 RoundToNearest(this Vector3 vector, float increment) =>
         new Vector3(MathUtils.RoundToNearest(vector.x, increment),
-            MathUtils.RoundToNearest(vector.y, increment),
-            MathUtils.RoundToNearest(vector.z, increment));
+        MathUtils.RoundToNearest(vector.y, increment),
+        MathUtils.RoundToNearest(vector.z, increment));
 
     public static Vector3 FloorToNearest(this Vector3 vector, float increment) =>
         new Vector3(MathUtils.FloorToNearest(vector.x, increment),
-            MathUtils.FloorToNearest(vector.y, increment),
-            MathUtils.FloorToNearest(vector.z, increment));
+        MathUtils.FloorToNearest(vector.y, increment),
+        MathUtils.FloorToNearest(vector.z, increment));
     #endregion
 }

@@ -19,7 +19,8 @@ public class CameraController : MonoBehaviour
     private void Update()
     {
         Cursor.lockState = CursorLockMode.Locked;
-        FirstPersonCamera.FPLook(Input.mousePositionDelta, transform, transform);
+
+        transform.rotation = FirstPersonCamera.FPLook(Input.mousePositionDelta, transform.rotation, 3, 3);
     }
 
     public Coroutine Shake(Vector3 posAmplitude = default, Vector3 rotAmplitude = default,
