@@ -6,20 +6,18 @@ using UnityEngine.InputSystem;
 public class Tester : MonoBehaviour
 {
     [SerializeField]
-    Transform target;
+    CameraController camera;
     [SerializeField]
     float duration = 1;
     [SerializeField]
     uint frequency = 5;
     [SerializeField]
-    Vector3 amplitude;
+    Vector3 posAmplitude,
+        rotAmplitude;
 
     void OnJump(InputValue inputValue)
     {
-        StartCoroutine(Utils.CROscillate((f) =>
-        {
-            target.eulerAngles = Utils.RoundToNearest(target.eulerAngles + amplitude * f, 0.0001f);
-        }, frequency, duration));
+        camera.Shake(posAmplitude, rotAmplitude, frequency, duration);
     }
 
     IEnumerator OscillateCR(Action<float> action, uint frequency, float durationSeconds, float epsilon = 0.0001f)
@@ -30,7 +28,7 @@ public class Tester : MonoBehaviour
         for (int i = 1; i <= durationFrames; i++)
         {
             float t = i / (float)durationFrames;
-            float currentValue = Utils.FloorToNearest((float)Math.Sin(2 * Mathf.PI * frequency * t) * (1 - t), epsilon);
+            float currentValue = MathUtils.FloorToNearest((float)Math.Sin(2 * Mathf.PI * frequency * t) * (1 - t), epsilon);
             float delta = currentValue - previousValue;
 
             action(delta);

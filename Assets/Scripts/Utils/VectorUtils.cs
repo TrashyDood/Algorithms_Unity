@@ -1,11 +1,9 @@
-using System;
-using System.Collections;
 using UnityEngine;
 
-public static class Utils
+public static class VectorUtils
 {
-    #region vector
-    public static Vector2 RandomVector2(float xMax, float yMax, float xMin = 0, float yMin = 0) =>
+    #region random
+    public static Vector2 RandomVector2(float xMax, float yMax,float xMin = 0, float yMin = 0) =>
         new Vector2(UnityEngine.Random.Range(xMin, xMax), UnityEngine.Random.Range(yMin, yMax));
 
     public static Vector2 RandomVector2(Vector2 max, Vector3 min = default) =>
@@ -38,11 +36,11 @@ public static class Utils
     }
     #endregion
 
-    #region out of bounds
+    #region bounds
     public static bool OutOfBounds(float x, float y, float xMin,
         float xMax, float yMin, float yMax) =>
-        !(x == Mathf.Clamp(x, xMin, xMax) &&
-        y == Mathf.Clamp(y, yMin, yMax));
+    !(x == Mathf.Clamp(x, xMin, xMax) &&
+    y == Mathf.Clamp(y, yMin, yMax));
 
     public static bool OutOfBounds(Vector2 position, Vector2 min, Vector2 max) =>
     OutOfBounds(position.x, position.y, min.x, max.x, min.y, max.y);
@@ -62,9 +60,7 @@ public static class Utils
     public static bool OutOfBounds(Vector3 position, Bounds bounds) =>
     OutOfBounds(position.x, position.y, position.z, bounds.min.x,
         bounds.max.x, bounds.min.y, bounds.max.y, bounds.min.z, bounds.max.z);
-    #endregion
 
-    #region outside bounds
     public static Vector2 OutsideBounds(float x, float y, float xMin,
         float xMax, float yMin, float yMax)
     {
@@ -121,32 +117,6 @@ public static class Utils
         bounds.min.y, bounds.max.y, bounds.min.z, bounds.max.z);
     #endregion
 
-    #region Arithmetic
-    public static double Oscillate(double frequency, double x) =>
-        Math.Sin(2 * Mathf.PI * x * frequency);
-
-    public static float Oscillate(float frequency, float t) =>
-        (float)Math.Sin(2 * Mathf.PI * frequency * t);
-
-    public static float OscillateDamped(float frequency, float t)
-    {
-        t = Mathf.Clamp01(t);
-        return Oscillate(frequency, t) * (1f - t);
-    }
-
-    public static float RoundToNearest(float value, float increment) =>
-        MathF.Round(value / increment) * increment;
-
-    public static float FloorToNearest(float value, float increment) =>
-        (int)(value / increment) * increment;
-
-    public static double RoundToNearest(double value, double increment) =>
-        Math.Round(value / increment) * increment;
-
-    public static double FloorToNearest(double value, double increment) =>
-        ((int)(value / increment)) * increment;
-    #endregion
-
     #region extensions
     public static Vector2 GetOrthoSize(this Camera camera)
     {
@@ -157,62 +127,21 @@ public static class Utils
     }
 
     public static Vector3 ClampVector(this Vector3 vector, Vector3 min, Vector3 max) =>
-    new Vector3(Mathf.Clamp(vector.x, min.x, max.x),
-        Mathf.Clamp(vector.y, min.y, max.y),
-        Mathf.Clamp(vector.z, min.z, max.z));
+        new Vector3(Mathf.Clamp(vector.x, min.x, max.x),
+            Mathf.Clamp(vector.y, min.y, max.y),
+            Mathf.Clamp(vector.z, min.z, max.z));
 
     public static Vector3 SmoothFollow(this Vector3 vector, Vector3 target, float smoothFactor, float delta) =>
         Vector3.Lerp(vector, target, (1 / smoothFactor) * delta);
 
     public static Vector3 RoundToNearest(this Vector3 vector, float increment) =>
-        new Vector3(RoundToNearest(vector.x, increment),
-        RoundToNearest(vector.y, increment),
-        RoundToNearest(vector.z, increment));
+        new Vector3(MathUtils.RoundToNearest(vector.x, increment),
+            MathUtils.RoundToNearest(vector.y, increment),
+            MathUtils.RoundToNearest(vector.z, increment));
 
     public static Vector3 FloorToNearest(this Vector3 vector, float increment) =>
-        new Vector3(FloorToNearest(vector.x, increment),
-        FloorToNearest(vector.y, increment),
-        FloorToNearest(vector.z, increment));
-    #endregion
-
-    #region coroutines
-    public static IEnumerator CRTimer(float duration, Action callback)
-    {
-        float endTime = Time.time + duration;
-
-        while (Time.time < endTime)
-            yield return new WaitForFixedUpdate();
-
-        callback.Invoke();
-    }
-
-    public static IEnumerator CRFixedUpdate(uint durationFrames, Action<float> callback)
-    {
-        uint frameCount = 0;
-
-        while (frameCount < durationFrames)
-        {
-            callback.Invoke(frameCount);
-            yield return new WaitForFixedUpdate();
-            frameCount++;
-        }
-    }
-
-    public static IEnumerator CROscillate(Action<float> action, uint frequency, float durationSeconds, float epsilon = 0.0001f)
-    {
-        int durationFrames = (int)MathF.Round(durationSeconds / Time.fixedDeltaTime);
-        float previousValue = 0;
-
-        for (int i = 1; i <= durationFrames; i++)
-        {
-            float currentValue = FloorToNearest(OscillateDamped(frequency, i / (float)durationFrames), epsilon);
-            float delta = currentValue - previousValue;
-
-            action(delta);
-
-            yield return new WaitForFixedUpdate();
-            previousValue = currentValue;
-        }
-    }
+        new Vector3(MathUtils.FloorToNearest(vector.x, increment),
+            MathUtils.FloorToNearest(vector.y, increment),
+            MathUtils.FloorToNearest(vector.z, increment));
     #endregion
 }
